@@ -102,28 +102,22 @@ function getFastestPromise(array) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
-  // function myAll(arr) {
-  //   const result = [];
-  //   let counter = 0;
-  //   return new Promise((res) => {
-  //     arr.forEach((prom, i) => {
-  //       prom.then((val) => {
-  //         result[i] = val;
-  //         counter += 1;
-  //         if (counter === arr.length) {
-  //           res(result);
-  //         }
-  //       });
-  //     });
-  //   });
-  // }
-  // return myAll(array).then((arr) => arr.reduce(action));
-  // return new Promise((res) => {
-  //   res(Promise.all(array).then((arr) => arr.reduce(action)));
-  // });
-  // return new Promise((res) => res(values.reduce(action, 0)));
+function chainPromises(array, action) {
+  // throw new Error('Not implemented');
+  return new Promise((resolve, reject) => {
+    if (!action) {
+      reject(new Error('No action specified!'));
+    }
+
+    let promise = array[0];
+    for (let i = 1; i < array.length; i += 1) {
+      promise = promise.then(
+        (itemFirst) => array[i].then((itemSecond) => action(itemFirst, itemSecond)),
+        () => { },
+      );
+    }
+    resolve(promise);
+  });
 }
 
 module.exports = {
